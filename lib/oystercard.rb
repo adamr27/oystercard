@@ -21,10 +21,12 @@ class Oystercard
   end
 
   def touch_in
+    fail 'not enough' if @balance < 1
     @travelling = true
   end
 
   def touch_out
+    deduct(1)
     @travelling = false
   end
 end
