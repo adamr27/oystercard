@@ -8,4 +8,8 @@ describe Oystercard do
   it 'can add money to my card' do
     expect(subject.top_up(10.10)).to eq(subject.balance)
   end
+
+  it 'cannot add more than 90' do
+    expect{ subject.top_up(100) }.to raise_error('over the limit')
+  end
 end
