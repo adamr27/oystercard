@@ -26,11 +26,13 @@ class Oystercard
 
   def touch_in(entryStation)
     fail 'not enough' if @balance < MINIMUM_CHARGE
+    fail 'failed to touch out' if @in_journey == true
     @journeys[:entry_station] = entryStation
     @in_journey, @entry_station = true, entryStation
   end
 
   def touch_out(exitStation)
+    fail 'failed to touch in' if @in_journey == false
     deduct(MINIMUM_CHARGE)
     @journeys[:exit_station] = exitStation
     @in_journey, @entry_station, @exit_station = false, nil, exitStation
