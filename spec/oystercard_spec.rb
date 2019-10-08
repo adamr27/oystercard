@@ -30,24 +30,38 @@ describe Oystercard do
 
   it "can be touched in" do
     subject.top_up(20)
-    subject.touch_in
+    subject.touch_in("station1")
     expect(subject.in_journey?).to eq(true)
   end
 
   it "can touch back out" do
     subject.top_up(20)
-    subject.touch_in
+    subject.touch_in("station1")
     subject.touch_out
     expect(subject.in_journey?).to eq(false)
   end
 
   it 'cannot deduct if balance is less than 1' do
-    expect{ subject.touch_in }.to raise_error 'not enough'
+    expect{ subject.touch_in("station1") }.to raise_error 'not enough'
   end
 
   it 'money comes out when touch out' do
     subject.top_up(20)
-    subject.touch_in
+    subject.touch_in("station1")
     expect { subject.touch_out }.to change{subject.balance}.by(-1)
+  end
+
+  let (:station){double :station}
+  it 'stores the entry station' do
+    subject.top_up(20)
+    subject.touch_in(station)
+    expect(subject.entry_station).to eq station
+  end
+  let (:station){double :station}
+  it "will forget the entry station on touch out" do
+    subject.top_up(20)
+    subject.touch_in(station)
+    subject.touch_out
+    expect(subject.entry_station).to eq(nil)
   end
 end
