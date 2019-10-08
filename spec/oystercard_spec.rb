@@ -37,7 +37,7 @@ describe Oystercard do
   it "can touch back out" do
     subject.top_up(20)
     subject.touch_in("station1")
-    subject.touch_out
+    subject.touch_out("station1")
     expect(subject.in_journey?).to eq(false)
   end
 
@@ -48,7 +48,7 @@ describe Oystercard do
   it 'money comes out when touch out' do
     subject.top_up(20)
     subject.touch_in("station1")
-    expect { subject.touch_out }.to change{subject.balance}.by(-1)
+    expect { subject.touch_out("station1") }.to change{subject.balance}.by(-1)
   end
 
   let (:station){double :station}
@@ -61,7 +61,26 @@ describe Oystercard do
   it "will forget the entry station on touch out" do
     subject.top_up(20)
     subject.touch_in(station)
-    subject.touch_out
+    subject.touch_out("station1")
     expect(subject.entry_station).to eq(nil)
+  end
+  let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
+
+  it 'stores exit stations' do
+    subject.top_up(20)
+    subject.touch_in(entry_station)
+    subject.touch_out(exit_station)
+    expect(subject.exit_station).to eq exit_station
+  end
+  it 'has an empty list of journys by default' do
+    expect(subject.journeys).to be_empty
+  end
+  let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
+  it 'stores a journey' do
+    subject.top_up(20)
+    subject.touch_in(entry_station)
+    subject.touch_out(exit_station)
+    expect(subject.journeys).to include journey
   end
 end
