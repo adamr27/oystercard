@@ -25,20 +25,20 @@ describe Oystercard do
   end
 
   it "can check if in journey?" do
-    expect(subject.in_journey?).to eq(false)
+    expect(subject.in_journey).to eq(false)
   end
 
   it "can be touched in" do
     subject.top_up(20)
     subject.touch_in("station1")
-    expect(subject.in_journey?).to eq(true)
+    expect(subject.in_journey).to eq(true)
   end
 
   it "can touch back out" do
     subject.top_up(20)
     subject.touch_in("station1")
     subject.touch_out("station1")
-    expect(subject.in_journey?).to eq(false)
+    expect(subject.in_journey).to eq(false)
   end
 
   it 'cannot deduct if balance is less than 1' do
